@@ -10,6 +10,7 @@ import { useState } from "react";
 import Header from "@/app/(components)/Header";
 import Rating from "@/app/(components)/Rating";
 import CreateProductModal from "@/app/products/CreateProductModal";
+import Image from "next/image";
 
 type ProductFormData = {
   name: string;
@@ -89,7 +90,13 @@ const Products = () => {
           >
             <div className="flex flex-col items-center">
               <div className="h-24 w-24 bg-gray-200 flex items-center justify-center mb-2">
-                img
+                <Image
+                  src={`https://dkm-inventory-management-bucket.s3.ap-southeast-1.amazonaws.com/product${Math.floor(Math.random() * 3) + 1}.png`}
+                  alt={product.name}
+                  width={150}
+                  height={150}
+                  className='mb-3 rounded-2xl w-36 h-36'
+                />
               </div>
               <h3 className="text-lg text-gray-900 font-semibold">
                 {product.name}
