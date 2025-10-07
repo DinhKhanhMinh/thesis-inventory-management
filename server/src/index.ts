@@ -8,24 +8,36 @@ import morgan from "morgan";
 import dashboardRoutes from "./routes/dashboardRoutes";
 import productRoutes from "./routes/productRoutes";
 import userRoutes from "./routes/userRoutes";
-import expenseRoutes from "./routes/expenseRoutes"; 
+import expenseRoutes from "./routes/expenseRoutes";
 
 /* CONFIGURATIONS */
 dotenv.config();
 const app = express();
-app.use(express.json());
+
+// Set up CORS first — before routes - for AWS deployment
+app.use(cors({
+  origin: [
+    "https://master.d34phz18nb303i.amplifyapp.com", //  Amplify frontend
+    "http://localhost:3000" // for local dev
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
+app.options("*", cors()); // handle preflight
+
+// Security & parsing
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cors());
+app.use(express.json());
 
 /* ROUTES */
-app.use("/dashboard", dashboardRoutes); // http://localhost:8000/dashboard
-app.use("/products", productRoutes); // http://localhost:8000/products
-app.use("/users", userRoutes); // http://localhost:8000/users
-app.use("/expenses", expenseRoutes); // http://localhost:8000/expenses 
+app.use("/dashboard", dashboardRoutes);
+app.use("/products", productRoutes);
+app.use("/users", userRoutes);
+app.use("/expenses", expenseRoutes);
 
 /* SERVER */
 const port = Number(process.env.PORT) || 3001;
